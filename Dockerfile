@@ -1,13 +1,14 @@
 FROM alpine:latest
 
-# Install tinyproxy (available in Alpine repos - no compilation needed)
+# install tinyproxy
 RUN apk add --no-cache tinyproxy
 
-# Copy configuration
+# copy config and entrypoint
 COPY tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expose proxy port
+# expose (for readability; Render enforces actual binding via $PORT)
 EXPOSE 8888
 
-# Run tinyproxy in foreground
-CMD ["tinyproxy", "-d", "-c", "/etc/tinyproxy/tinyproxy.conf"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
